@@ -149,6 +149,10 @@ section{padding:96px 64px;}
 .gc-rio{background:linear-gradient(135deg,#041422 0%,#0c2640 50%,#061810 100%);}
 .gc-mercado{background:linear-gradient(135deg,#1a0a00 0%,#2a1500 50%,#0f1200 100%);}
 .gc-emoji{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:64px;opacity:.55;pointer-events:none;}
+.gcard-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+.gcard:hover .gcard-img{transform:scale(1.07);}
+.gcard-overlay{position:absolute;inset:0;background:rgba(6,26,13,.25);transition:background .3s;}
+.gcard:hover .gcard-overlay{background:rgba(6,26,13,.1);}
 
 /* ── ATTRACTIONS ── */
 #attractions{background:var(--g800);}
@@ -158,7 +162,9 @@ section{padding:96px 64px;}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:20px;}
 .acard{background:var(--card);border:1px solid rgba(42,158,80,.15);border-radius:var(--radius);overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;}
 .acard:hover{transform:translateY(-5px);box-shadow:0 18px 42px rgba(0,0,0,.35);border-color:rgba(42,158,80,.4);}
-.acard-top{height:160px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;}
+.acard-top{height:160px;overflow:hidden;position:relative;}
+.acard-top img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;display:block;}
+.acard:hover .acard-top img{transform:scale(1.07);}
 .acard-top::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(10,38,19,.85));}
 .acard-badge{position:absolute;top:12px;right:12px;z-index:1;background:var(--g400);color:var(--g900);font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:20px;text-transform:uppercase;}
 .acard-body{padding:20px 22px 22px;}
@@ -169,6 +175,17 @@ section{padding:96px 64px;}
 .maps-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--g300);letter-spacing:.5px;transition:all .2s;padding:6px 14px;border-radius:20px;border:1px solid rgba(42,158,80,.3);background:rgba(42,158,80,.08);}
 .maps-link:hover{color:var(--g900);background:var(--g300);border-color:var(--g300);}
 .maps-link::after{content:'↗';}
+
+/* ── PHOTO GRID ── */
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);grid-auto-rows:220px;gap:12px;margin-bottom:16px;}
+.pgitem{position:relative;border-radius:var(--radius);overflow:hidden;cursor:pointer;background:var(--g800);}
+.pgitem-wide{grid-column:span 2;}
+.pgitem img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease,filter .4s ease;}
+.pgitem:hover img{transform:scale(1.06);filter:brightness(1.1);}
+.pgitem-label{position:absolute;bottom:0;left:0;right:0;padding:12px 14px;background:linear-gradient(transparent,rgba(6,26,13,.9));font-size:13px;font-weight:600;color:var(--white);letter-spacing:.4px;transform:translateY(2px);opacity:.85;transition:opacity .25s,transform .25s;}
+.pgitem:hover .pgitem-label{opacity:1;transform:translateY(0);}
+@media(max-width:900px){.photo-grid{grid-template-columns:1fr 1fr;padding:0;} .pgitem-wide{grid-column:span 2;} div[style*="padding:0 64px"]{padding:0 28px !important;}}
+@media(max-width:560px){.photo-grid{grid-template-columns:1fr;} .pgitem-wide{grid-column:span 1;}}
 
 /* ── MAP ── */
 #map{background:var(--g900);}
@@ -379,28 +396,34 @@ footer{background:#040e07;padding:44px 64px 28px;border-top:1px solid rgba(42,15
   </div>
   <div class="gallery-track-wrap">
     <div class="gallery-track" id="gtrack">
-      <div class="gcard gc-praia" onclick="openModal('praia')">
-        <div class="gc-emoji">🏖️</div>
+      <div class="gcard" onclick="openModal('praia')">
+        <img class="gcard-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Praia_do_Cai_N%27%C3%81GUA_-_Porto_Velho_-_RO.jpg/640px-Praia_do_Cai_N%27%C3%81GUA_-_Porto_Velho_-_RO.jpg" alt="Praia do Cai N'Água" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#0c2b3d,#143d28)';">
+        <div class="gcard-overlay"></div>
         <div class="gcard-label">Praia do Cai N'Água</div>
       </div>
-      <div class="gcard gc-ferro" onclick="openModal('ferro')">
-        <div class="gc-emoji">🚂</div>
+      <div class="gcard" onclick="openModal('ferro')">
+        <img class="gcard-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Locomotiva_do_Museu_Ferroviario_de_Porto_Velho.jpg/640px-Locomotiva_do_Museu_Ferroviario_de_Porto_Velho.jpg" alt="Museu Madeira-Mamoré" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#1a1000,#0f1800)';">
+        <div class="gcard-overlay"></div>
         <div class="gcard-label">Museu Madeira-Mamoré</div>
       </div>
-      <div class="gcard gc-parque" onclick="openModal('parque')">
-        <div class="gc-emoji">🌿</div>
+      <div class="gcard" onclick="openModal('parque')">
+        <img class="gcard-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Floresta_Amaz%C3%B4nica.jpg/640px-Floresta_Amaz%C3%B4nica.jpg" alt="Floresta Amazônica" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#052210,#061a0d)';">
+        <div class="gcard-overlay"></div>
         <div class="gcard-label">Parque Natural Municipal</div>
       </div>
-      <div class="gcard gc-catedral" onclick="openModal('catedral')">
-        <div class="gc-emoji">⛪</div>
+      <div class="gcard" onclick="openModal('catedral')">
+        <img class="gcard-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Catedral_Nossa_Senhora_das_Gra%C3%A7as_-_Porto_Velho.jpg/640px-Catedral_Nossa_Senhora_das_Gra%C3%A7as_-_Porto_Velho.jpg" alt="Catedral Nossa Senhora das Graças" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#180d2a,#0d0f25)';">
+        <div class="gcard-overlay"></div>
         <div class="gcard-label">Catedral Nossa Senhora das Graças</div>
       </div>
-      <div class="gcard gc-rio" onclick="openModal('rio')">
-        <div class="gc-emoji">🚤</div>
+      <div class="gcard" onclick="openModal('rio')">
+        <img class="gcard-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Rio_Madeira_-_Porto_Velho.jpg/640px-Rio_Madeira_-_Porto_Velho.jpg" alt="Rio Madeira" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#041422,#061810)';">
+        <div class="gcard-overlay"></div>
         <div class="gcard-label">Rio Madeira</div>
       </div>
-      <div class="gcard gc-mercado" onclick="openModal('mercado')">
-        <div class="gc-emoji">🐟</div>
+      <div class="gcard" onclick="openModal('mercado')">
+        <img class="gcard-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Mercado_Municipal_de_Porto_Velho.jpg/640px-Mercado_Municipal_de_Porto_Velho.jpg" alt="Mercado do Peixe" loading="lazy" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#1a0a00,#0f1200)';">
+        <div class="gcard-overlay"></div>
         <div class="gcard-label">Mercado do Peixe</div>
       </div>
     </div>
@@ -408,6 +431,49 @@ footer{background:#040e07;padding:44px 64px 28px;border-top:1px solid rgba(42,15
   <div class="gallery-controls">
     <button class="gctrl" id="gprev" aria-label="Previous">←</button>
     <button class="gctrl" id="gnext" aria-label="Next">→</button>
+  </div>
+
+  <!-- GALERIA DE FOTOS REAIS -->
+  <div class="gallery-header" style="margin-top:56px;">
+    <p class="sec-label">Fotos Reais</p>
+    <h2 class="sec-title" style="margin-bottom:8px;">Porto Velho em imagens</h2>
+    <p style="font-size:15px;color:var(--muted);font-weight:300;max-width:480px;">Fotografias reais de Porto Velho — a cidade, o rio, a floresta e a história.</p>
+  </div>
+  <div style="padding:0 64px;margin-top:32px;">
+    <div class="photo-grid">
+      <div class="pgitem pgitem-wide">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Porto_Velho_RO.jpg/1280px-Porto_Velho_RO.jpg" alt="Vista aérea de Porto Velho" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#0c2b3d,#143d28)';this.style.display='none';">
+        <div class="pgitem-label">Vista Aérea — Porto Velho</div>
+      </div>
+      <div class="pgitem">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Praia_do_Cai_N%27%C3%81GUA_-_Porto_Velho_-_RO.jpg/640px-Praia_do_Cai_N%27%C3%81GUA_-_Porto_Velho_-_RO.jpg" alt="Praia do Cai N'Água" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#0c2b3d,#143d28)';this.style.display='none';">
+        <div class="pgitem-label">Praia do Cai N'Água</div>
+      </div>
+      <div class="pgitem">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Locomotiva_do_Museu_Ferroviario_de_Porto_Velho.jpg/640px-Locomotiva_do_Museu_Ferroviario_de_Porto_Velho.jpg" alt="Locomotiva Madeira-Mamoré" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#1a1000,#0f1800)';this.style.display='none';">
+        <div class="pgitem-label">Locomotiva — Museu Madeira-Mamoré</div>
+      </div>
+      <div class="pgitem">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Rio_Madeira_-_Porto_Velho.jpg/640px-Rio_Madeira_-_Porto_Velho.jpg" alt="Rio Madeira" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#041422,#061810)';this.style.display='none';">
+        <div class="pgitem-label">Rio Madeira ao entardecer</div>
+      </div>
+      <div class="pgitem">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Catedral_Nossa_Senhora_das_Gra%C3%A7as_-_Porto_Velho.jpg/640px-Catedral_Nossa_Senhora_das_Gra%C3%A7as_-_Porto_Velho.jpg" alt="Catedral" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#180d2a,#0d0f25)';this.style.display='none';">
+        <div class="pgitem-label">Catedral Nossa Senhora das Graças</div>
+      </div>
+      <div class="pgitem pgitem-wide">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Floresta_Amaz%C3%B4nica.jpg/1280px-Floresta_Amaz%C3%B4nica.jpg" alt="Floresta Amazônica" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#052210,#061a0d)';this.style.display='none';">
+        <div class="pgitem-label">Floresta Amazônica — Rondônia</div>
+      </div>
+      <div class="pgitem">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Mercado_Municipal_de_Porto_Velho.jpg/640px-Mercado_Municipal_de_Porto_Velho.jpg" alt="Mercado Municipal" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#1a0a00,#0f1200)';this.style.display='none';">
+        <div class="pgitem-label">Mercado Municipal</div>
+      </div>
+      <div class="pgitem">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/Porto_velho_rondonia.jpg/640px-Porto_velho_rondonia.jpg" alt="Porto Velho cidade" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#0a1a0e,#0e2e18)';this.style.display='none';">
+        <div class="pgitem-label">Porto Velho — Centro</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -428,7 +494,10 @@ footer{background:#040e07;padding:44px 64px 28px;border-top:1px solid rgba(42,15
     </div>
     <div class="cards" id="cards">
       <div class="acard" data-cat="nature" onclick="openModal('praia')">
-        <div class="acard-top gc-praia">🏖️<span class="acard-badge" data-t="badge_nature">Nature</span></div>
+        <div class="acard-top">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Praia_do_Cai_N%27%C3%81GUA_-_Porto_Velho_-_RO.jpg/640px-Praia_do_Cai_N%27%C3%81GUA_-_Porto_Velho_-_RO.jpg" alt="Praia do Cai N'Água" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#0c2b3d,#143d28)';this.style.display='none';">
+          <span class="acard-badge" data-t="badge_nature">Nature</span>
+        </div>
         <div class="acard-body">
           <h3>Praia do Cai N'Água</h3>
           <p data-t="praia_short">The most beloved river beach in Porto Velho — families gather on weekends to swim and watch the Madeira roll by.</p>
@@ -439,7 +508,10 @@ footer{background:#040e07;padding:44px 64px 28px;border-top:1px solid rgba(42,15
         </div>
       </div>
       <div class="acard" data-cat="history" onclick="openModal('ferro')">
-        <div class="acard-top gc-ferro">🚂<span class="acard-badge" data-t="badge_history">History</span></div>
+        <div class="acard-top">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Locomotiva_do_Museu_Ferroviario_de_Porto_Velho.jpg/640px-Locomotiva_do_Museu_Ferroviario_de_Porto_Velho.jpg" alt="Museu Madeira-Mamoré" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#1a1000,#0f1800)';this.style.display='none';">
+          <span class="acard-badge" data-t="badge_history">History</span>
+        </div>
         <div class="acard-body">
           <h3>Museu Madeira-Mamoré</h3>
           <p data-t="ferro_short">The railroad that cost thousands of lives and connected the Amazon to the world. One of Brazil's most significant industrial heritage sites.</p>
@@ -450,7 +522,10 @@ footer{background:#040e07;padding:44px 64px 28px;border-top:1px solid rgba(42,15
         </div>
       </div>
       <div class="acard" data-cat="nature" onclick="openModal('parque')">
-        <div class="acard-top gc-parque">🌿<span class="acard-badge" data-t="badge_nature">Nature</span></div>
+        <div class="acard-top">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Floresta_Amaz%C3%B4nica.jpg/640px-Floresta_Amaz%C3%B4nica.jpg" alt="Parque Natural Municipal" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#052210,#061a0d)';this.style.display='none';">
+          <span class="acard-badge" data-t="badge_nature">Nature</span>
+        </div>
         <div class="acard-body">
           <h3>Parque Natural Municipal</h3>
           <p data-t="parque_short">A patch of genuine Amazon forest inside the city limits. Trails, birdsong, and the reminder that nature here is never far away.</p>
@@ -461,7 +536,10 @@ footer{background:#040e07;padding:44px 64px 28px;border-top:1px solid rgba(42,15
         </div>
       </div>
       <div class="acard" data-cat="food" onclick="openModal('mercado')">
-        <div class="acard-top gc-mercado">🐟<span class="acard-badge" data-t="badge_food">Food</span></div>
+        <div class="acard-top">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Mercado_Municipal_de_Porto_Velho.jpg/640px-Mercado_Municipal_de_Porto_Velho.jpg" alt="Mercado do Peixe" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#1a0a00,#0f1200)';this.style.display='none';">
+          <span class="acard-badge" data-t="badge_food">Food</span>
+        </div>
         <div class="acard-body">
           <h3>Mercado do Peixe</h3>
           <p data-t="mercado_short">Fresh tambaqui, pirarucu, and tucunaré pulled from the Madeira every morning. The local food scene starts right here.</p>
@@ -472,7 +550,10 @@ footer{background:#040e07;padding:44px 64px 28px;border-top:1px solid rgba(42,15
         </div>
       </div>
       <div class="acard" data-cat="history" onclick="openModal('catedral')">
-        <div class="acard-top gc-catedral">⛪<span class="acard-badge" data-t="badge_history">History</span></div>
+        <div class="acard-top">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Catedral_Nossa_Senhora_das_Gra%C3%A7as_-_Porto_Velho.jpg/640px-Catedral_Nossa_Senhora_das_Gra%C3%A7as_-_Porto_Velho.jpg" alt="Catedral Nossa Senhora das Graças" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#180d2a,#0d0f25)';this.style.display='none';">
+          <span class="acard-badge" data-t="badge_history">History</span>
+        </div>
         <div class="acard-body">
           <h3>Catedral Nossa Senhora das Graças</h3>
           <p data-t="catedral_short">The city's landmark cathedral sits at the center of Porto Velho — a quiet anchor in an otherwise restless urban landscape.</p>
@@ -483,7 +564,10 @@ footer{background:#040e07;padding:44px 64px 28px;border-top:1px solid rgba(42,15
         </div>
       </div>
       <div class="acard" data-cat="nature" onclick="openModal('rio')">
-        <div class="acard-top gc-rio">🚤<span class="acard-badge" data-t="badge_nature">Nature</span></div>
+        <div class="acard-top">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Rio_Madeira_-_Porto_Velho.jpg/640px-Rio_Madeira_-_Porto_Velho.jpg" alt="Rio Madeira" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg,#041422,#061810)';this.style.display='none';">
+          <span class="acard-badge" data-t="badge_nature">Nature</span>
+        </div>
         <div class="acard-body">
           <h3>Rio Madeira Boat Tour</h3>
           <p data-t="rio_short">Get on the water. The Madeira is one of the great Amazon tributaries — the only way to truly understand Porto Velho's scale is from the river.</p>
