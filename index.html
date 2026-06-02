@@ -1,21 +1,983 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Título da Página</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Porto Tour — Discover Porto Velho</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g900: #061a0d;
+  --g800: #0a2613;
+  --g700: #0f3a1c;
+  --g600: #165228;
+  --g500: #1e7038;
+  --g400: #2a9e50;
+  --g300: #3fc96e;
+  --g200: #8ee8a8;
+  --g100: #d2f5dc;
+  --g050: #f0faf3;
+  --amber: #d4a017;
+  --amber-lt: #f5d97a;
+  --river: #0c2233;
+  --white: #f8fdf9;
+  --muted: #7aad8a;
+  --card: rgba(10,38,19,0.85);
+  --radius: 16px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--g900);color:var(--white);overflow-x:hidden;}
+img{display:block;max-width:100%;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;cursor:pointer;border:none;}
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--g900);}
+::-webkit-scrollbar-thumb{background:var(--g500);border-radius:3px;}
+
+/* ── NAV ── */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px 64px;
+  background:rgba(6,26,13,0.82);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(42,158,80,0.18);
+  transition:padding .3s;
+  gap:16px;
+}
+#nav.scrolled{padding:14px 64px;}
+.nav-brand{font-family:'DM Serif Display',serif;font-size:20px;letter-spacing:2px;color:var(--white);flex-shrink:0;}
+.nav-brand em{font-style:normal;color:var(--g300);}
+.nav-links{display:flex;align-items:center;gap:28px;list-style:none;}
+.nav-links a{font-size:14px;font-weight:500;letter-spacing:.6px;color:var(--muted);transition:color .2s;}
+.nav-links a:hover{color:var(--g300);}
+.nav-cta{background:var(--g400);color:var(--g900) !important;padding:9px 22px;border-radius:40px;font-weight:600;letter-spacing:.5px;transition:background .2s,transform .15s;}
+.nav-cta:hover{background:var(--g300) !important;transform:scale(1.03);}
+
+/* Language toggle */
+.nav-right{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+#langBtn{
+  display:flex;align-items:center;gap:6px;
+  background:rgba(42,158,80,.1);
+  border:1px solid rgba(42,158,80,.3);
+  border-radius:40px;
+  padding:7px 14px;
+  font-size:12px;font-weight:700;letter-spacing:1px;
+  color:var(--g300);
+  transition:all .2s;
+  white-space:nowrap;
+}
+#langBtn:hover{background:rgba(42,158,80,.22);border-color:rgba(42,158,80,.55);}
+#langBtn .lang-flag{font-size:14px;}
+#langBtn .lang-code{font-size:11px;letter-spacing:1.5px;}
+
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;padding:4px;}
+.nav-hamburger span{display:block;width:22px;height:2px;background:var(--muted);border-radius:2px;transition:.3s;}
+.nav-mobile{display:none;}
+
+/* ── HERO ── */
+#hero{min-height:100vh;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.hero-scene{position:absolute;inset:0;}
+#stars{position:absolute;inset:0;pointer-events:none;}
+.star{position:absolute;background:#d4f5de;border-radius:50%;animation:twinkle var(--d,3s) ease-in-out infinite alternate;}
+@keyframes twinkle{from{opacity:var(--a,.3);transform:scale(1);}to{opacity:var(--b,.9);transform:scale(1.4);}}
+.moon{position:absolute;top:72px;right:10%;width:76px;height:76px;border-radius:50%;background:var(--amber-lt);box-shadow:0 0 48px rgba(245,217,122,.2);overflow:hidden;}
+.moon::after{content:'';position:absolute;top:-8px;left:18px;width:58px;height:58px;border-radius:50%;background:var(--g900);}
+.canopy{position:absolute;bottom:90px;left:0;right:0;pointer-events:none;}
+.river-strip{position:absolute;bottom:0;left:0;right:0;height:100px;background:var(--river);overflow:hidden;}
+.rwave{position:absolute;left:-100%;width:300%;height:2px;background:rgba(20,70,100,.7);animation:rwav var(--s,9s) linear infinite;}
+@keyframes rwav{from{transform:translateX(0);}to{transform:translateX(33.3%);}}
+.hero-content{position:relative;z-index:10;text-align:center;padding:120px 24px 80px;animation:fadeUp .9s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(42,158,80,.15);border:1px solid rgba(42,158,80,.35);border-radius:40px;padding:7px 18px;font-size:12px;font-weight:600;letter-spacing:2px;color:var(--g300);text-transform:uppercase;margin-bottom:28px;}
+.hero-eyebrow::before{content:'📍';}
+.hero-title{font-family:'DM Serif Display',serif;font-size:clamp(58px,9vw,108px);line-height:.95;letter-spacing:4px;color:var(--white);margin-bottom:10px;}
+.hero-title em{font-style:italic;color:var(--g300);}
+.hero-sub{font-size:13px;letter-spacing:5px;color:var(--muted);text-transform:uppercase;margin-bottom:32px;}
+.hero-rule{width:240px;height:1px;background:rgba(42,158,80,.3);margin:0 auto 32px;}
+.hero-desc{font-size:18px;line-height:1.7;color:rgba(248,253,249,.65);max-width:480px;margin:0 auto 44px;font-weight:300;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn{display:inline-block;padding:14px 36px;border-radius:40px;font-size:15px;font-weight:600;letter-spacing:.5px;transition:all .2s;cursor:pointer;}
+.btn-green{background:var(--g400);color:var(--g900);border:2px solid var(--g400);}
+.btn-green:hover{background:var(--g300);border-color:var(--g300);transform:translateY(-2px);box-shadow:0 10px 28px rgba(42,158,80,.3);}
+.btn-ghost{background:transparent;color:var(--white);border:1px solid rgba(248,253,249,.25);}
+.btn-ghost:hover{border-color:rgba(248,253,249,.6);transform:translateY(-2px);}
+.scroll-hint{position:absolute;bottom:116px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center;gap:6px;}
+.scroll-hint span{font-size:11px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;}
+.scroll-arrow{width:1px;height:40px;background:var(--g500);animation:arrowDrop 1.6s ease-in-out infinite;}
+@keyframes arrowDrop{0%,100%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}}
+
+/* ── SECTIONS ── */
+section{padding:96px 64px;}
+.sec-label{font-size:11px;letter-spacing:4px;font-weight:600;color:var(--g300);text-transform:uppercase;margin-bottom:10px;}
+.sec-title{font-family:'DM Serif Display',serif;font-size:clamp(32px,3.5vw,50px);color:var(--white);margin-bottom:14px;line-height:1.1;}
+.sec-desc{font-size:17px;color:var(--muted);max-width:500px;line-height:1.75;font-weight:300;margin-bottom:56px;}
+.inner{max-width:1120px;margin:0 auto;}
+
+/* ── HOW IT WORKS ── */
+#how{background:var(--g800);}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:2px;border:1px solid rgba(42,158,80,.15);border-radius:var(--radius);overflow:hidden;}
+.step{background:var(--card);padding:36px 30px;border-right:1px solid rgba(42,158,80,.1);position:relative;}
+.step:last-child{border-right:none;}
+.step-n{font-family:'DM Serif Display',serif;font-size:52px;color:rgba(42,158,80,.12);line-height:1;margin-bottom:18px;}
+.step-icon{font-size:28px;margin-bottom:14px;}
+.step h3{font-family:'DM Serif Display',serif;font-size:19px;color:var(--white);margin-bottom:8px;}
+.step p{font-size:14px;color:var(--muted);line-height:1.65;}
+.step-line{position:absolute;top:0;left:0;right:0;height:3px;background:var(--g400);transform:scaleX(0);transform-origin:left;transition:transform .35s ease;}
+.step:hover .step-line{transform:scaleX(1);}
+.step:hover{background:rgba(10,38,19,.98);}
+
+/* ── GALLERY ── */
+#gallery{background:var(--g900);padding:96px 0;}
+.gallery-header{padding:0 64px;margin-bottom:40px;}
+.gallery-track-wrap{overflow:hidden;position:relative;}
+.gallery-track-wrap::before,.gallery-track-wrap::after{content:'';position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none;}
+.gallery-track-wrap::before{left:0;background:linear-gradient(to right,var(--g900),transparent);}
+.gallery-track-wrap::after{right:0;background:linear-gradient(to left,var(--g900),transparent);}
+.gallery-controls{display:flex;gap:12px;padding:20px 64px 0;}
+.gctrl{width:40px;height:40px;border-radius:50%;background:rgba(42,158,80,.15);border:1px solid rgba(42,158,80,.3);color:var(--g300);font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.gctrl:hover{background:var(--g400);color:var(--g900);border-color:var(--g400);}
+.gallery-track{display:flex;gap:16px;padding:4px 64px 4px;transition:transform .5s cubic-bezier(.4,0,.2,1);will-change:transform;}
+.gcard{min-width:320px;height:220px;border-radius:var(--radius);overflow:hidden;position:relative;flex-shrink:0;cursor:pointer;}
+.gcard-label{position:absolute;bottom:0;left:0;right:0;padding:14px 16px;background:linear-gradient(transparent,rgba(6,26,13,.92));font-size:13px;font-weight:600;letter-spacing:.5px;color:var(--white);transform:translateY(4px);opacity:.9;transition:opacity .25s,transform .25s;}
+.gcard:hover .gcard-label{opacity:1;transform:translateY(0);}
+.gc-praia{background:linear-gradient(135deg,#0c2b3d 0%,#0e3f55 50%,#143d28 100%);}
+.gc-ferro{background:linear-gradient(135deg,#1a1000 0%,#2e1a00 50%,#0f1800 100%);}
+.gc-parque{background:linear-gradient(135deg,#052210 0%,#0d3a18 60%,#061a0d 100%);}
+.gc-catedral{background:linear-gradient(135deg,#180d2a 0%,#251040 50%,#0d0f25 100%);}
+.gc-rio{background:linear-gradient(135deg,#041422 0%,#0c2640 50%,#061810 100%);}
+.gc-mercado{background:linear-gradient(135deg,#1a0a00 0%,#2a1500 50%,#0f1200 100%);}
+.gc-emoji{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:64px;opacity:.55;pointer-events:none;}
+
+/* ── ATTRACTIONS ── */
+#attractions{background:var(--g800);}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:40px;}
+.ftab{padding:8px 20px;border-radius:40px;font-size:13px;font-weight:500;letter-spacing:.5px;border:1px solid rgba(42,158,80,.3);color:var(--muted);background:transparent;transition:all .2s;}
+.ftab.on,.ftab:hover{background:var(--g400);color:var(--g900);border-color:var(--g400);font-weight:600;}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:20px;}
+.acard{background:var(--card);border:1px solid rgba(42,158,80,.15);border-radius:var(--radius);overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;}
+.acard:hover{transform:translateY(-5px);box-shadow:0 18px 42px rgba(0,0,0,.35);border-color:rgba(42,158,80,.4);}
+.acard-top{height:160px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;}
+.acard-top::after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(10,38,19,.85));}
+.acard-badge{position:absolute;top:12px;right:12px;z-index:1;background:var(--g400);color:var(--g900);font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:20px;text-transform:uppercase;}
+.acard-body{padding:20px 22px 22px;}
+.acard-body h3{font-family:'DM Serif Display',serif;font-size:19px;color:var(--white);margin-bottom:6px;}
+.acard-body p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:16px;}
+.acard-foot{display:flex;justify-content:space-between;align-items:center;}
+.stars-row{color:var(--amber);font-size:12px;}
+.maps-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:var(--g300);letter-spacing:.5px;transition:all .2s;padding:6px 14px;border-radius:20px;border:1px solid rgba(42,158,80,.3);background:rgba(42,158,80,.08);}
+.maps-link:hover{color:var(--g900);background:var(--g300);border-color:var(--g300);}
+.maps-link::after{content:'↗';}
+
+/* ── MAP ── */
+#map{background:var(--g900);}
+.map-wrap{background:var(--card);border:1px solid rgba(42,158,80,.2);border-radius:var(--radius);overflow:hidden;height:500px;position:relative;}
+.map-wrap iframe{width:100%;height:100%;border:none;}
+.map-pins-legend{position:absolute;bottom:16px;left:16px;background:rgba(6,26,13,.9);border:1px solid rgba(42,158,80,.25);border-radius:12px;padding:14px 18px;pointer-events:none;}
+.map-pins-legend p{font-size:10px;letter-spacing:2px;font-weight:700;color:var(--g300);text-transform:uppercase;margin-bottom:8px;}
+.leg-item{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.leg-dot{width:8px;height:8px;border-radius:50%;}
+.leg-item span{font-size:12px;color:var(--muted);}
+
+/* ── ENTREPRENEURS ── */
+#entrepreneurs{background:var(--g800);}
+.emp-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:start;}
+.emp-perks{display:flex;flex-direction:column;gap:18px;margin-top:40px;}
+.perk{display:flex;gap:14px;align-items:flex-start;padding:18px 20px;background:rgba(6,26,13,.6);border:1px solid rgba(42,158,80,.12);border-radius:12px;transition:border-color .25s;}
+.perk:hover{border-color:rgba(42,158,80,.35);}
+.perk-ico{width:38px;height:38px;min-width:38px;background:rgba(42,158,80,.12);border:1px solid rgba(42,158,80,.25);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.perk-text h4{font-size:15px;font-weight:600;color:var(--white);margin-bottom:3px;}
+.perk-text p{font-size:13px;color:var(--muted);line-height:1.55;}
+.form-card{background:rgba(6,26,13,.9);border:1px solid rgba(42,158,80,.22);border-radius:20px;padding:40px 36px;}
+.form-card h3{font-family:'DM Serif Display',serif;font-size:22px;color:var(--white);margin-bottom:6px;}
+.form-card .form-note{font-size:13px;color:var(--muted);margin-bottom:28px;}
+.fgroup{margin-bottom:16px;}
+.fgroup label{display:block;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--g200);text-transform:uppercase;margin-bottom:6px;}
+.fgroup input,.fgroup select,.fgroup textarea{width:100%;background:rgba(14,58,28,.5);border:1px solid rgba(42,158,80,.25);border-radius:10px;padding:11px 14px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--white);outline:none;transition:border-color .2s;}
+.fgroup input:focus,.fgroup select:focus,.fgroup textarea:focus{border-color:var(--g400);background:rgba(14,58,28,.7);}
+.fgroup input::placeholder,.fgroup textarea::placeholder{color:rgba(122,173,138,.45);}
+.fgroup select option{background:#0f3a1c;}
+.fgroup textarea{resize:vertical;min-height:88px;}
+.form-submit{width:100%;margin-top:6px;background:var(--g400);color:var(--g900);font-size:16px;font-weight:700;letter-spacing:.5px;padding:14px;border-radius:40px;transition:background .2s,transform .15s;}
+.form-submit:hover{background:var(--g300);transform:translateY(-1px);}
+
+/* ── ABOUT ── */
+#about{background:var(--g900);}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:40px;}
+.stat{background:var(--card);border:1px solid rgba(42,158,80,.15);border-radius:14px;padding:22px 18px;text-align:center;}
+.stat-n{font-family:'DM Serif Display',serif;font-size:36px;color:var(--g300);}
+.stat-l{font-size:12px;color:var(--muted);margin-top:3px;}
+.team-row{margin-top:32px;}
+.team-row h4{font-size:11px;letter-spacing:3px;font-weight:700;color:var(--g300);text-transform:uppercase;margin-bottom:14px;}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{padding:7px 16px;border-radius:40px;font-size:13px;font-weight:500;color:var(--g200);background:rgba(42,158,80,.1);border:1px solid rgba(42,158,80,.25);}
+.about-facts{display:flex;flex-direction:column;gap:14px;}
+.fact{display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--card);border:1px solid rgba(42,158,80,.15);border-radius:12px;transition:border-color .25s;}
+.fact:hover{border-color:rgba(42,158,80,.35);}
+.fact-ico{font-size:22px;min-width:30px;text-align:center;}
+.fact-text{font-size:14px;color:var(--muted);line-height:1.5;}
+.fact-text strong{color:var(--white);display:block;margin-bottom:2px;}
+
+/* ── FOOTER ── */
+footer{background:#040e07;padding:44px 64px 28px;border-top:1px solid rgba(42,158,80,.12);}
+.footer-inner{max-width:1120px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+.footer-brand{font-family:'DM Serif Display',serif;font-size:18px;letter-spacing:2px;color:var(--white);}
+.footer-brand em{font-style:normal;color:var(--g300);}
+.footer-copy{font-size:13px;color:rgba(122,173,138,.4);text-align:center;line-height:1.6;}
+.footer-v{font-size:11px;color:rgba(122,173,138,.25);letter-spacing:2px;}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;align-items:center;justify-content:center;padding:20px;}
+.overlay.open{display:flex;}
+.mbox{background:#080f0a;border:1px solid rgba(42,158,80,.3);border-radius:20px;padding:40px;max-width:460px;width:100%;position:relative;animation:fadeUp .3s ease both;}
+.mclose{position:absolute;top:14px;right:18px;background:none;color:var(--muted);font-size:22px;line-height:1;}
+.mclose:hover{color:var(--white);}
+.m-sub{font-size:11px;letter-spacing:3px;color:var(--g300);text-transform:uppercase;margin-bottom:6px;}
+.m-title{font-family:'DM Serif Display',serif;font-size:24px;color:var(--white);margin-bottom:12px;}
+.m-ico{font-size:64px;text-align:center;margin:14px 0;}
+.m-desc{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:16px;}
+.m-tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px;}
+.m-tag{font-size:12px;color:var(--g200);background:rgba(42,158,80,.12);border:1px solid rgba(42,158,80,.28);padding:4px 12px;border-radius:14px;}
+.m-maps{display:inline-flex;align-items:center;gap:6px;background:var(--g400);color:var(--g900);font-size:14px;font-weight:700;padding:11px 26px;border-radius:40px;transition:background .2s;}
+.m-maps:hover{background:var(--g300);}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:28px;right:28px;background:var(--g400);color:var(--g900);font-size:14px;font-weight:600;padding:13px 24px;border-radius:40px;z-index:400;transform:translateY(60px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+#toast.show{transform:translateY(0);opacity:1;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  section{padding:72px 28px;}
+  #nav{padding:16px 28px;}
+  #nav.scrolled{padding:12px 28px;}
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+  .nav-mobile{display:flex;flex-direction:column;gap:18px;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(6,26,13,.97);align-items:center;justify-content:center;z-index:190;list-style:none;animation:fadeUp .25s ease both;}
+  .nav-mobile a{font-size:22px;color:var(--white);font-family:'DM Serif Display',serif;}
+  .nav-mobile a:hover{color:var(--g300);}
+  .nav-mobile .nav-cta{background:var(--g400) !important;color:var(--g900) !important;padding:12px 32px;border-radius:40px;}
+  .emp-grid,.about-grid{grid-template-columns:1fr;gap:44px;}
+  .gallery-track{padding:4px 28px;}
+  .gallery-header,.gallery-controls{padding:0 28px;}
+  .footer-inner{flex-direction:column;text-align:center;}
+  .gcard{min-width:260px;height:190px;}
+  #langBtn .lang-label{display:none;}
+}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Meu Site</h1>
-    </header>
 
-    <main>
-        <p>Este é o meu primeiro parágrafo.</p>
-    </main>
+<!-- NAV -->
+<nav id="nav">
+  <a href="#hero" class="nav-brand">PORTO <em>TOUR</em></a>
+  <ul class="nav-links">
+    <li><a href="#how" data-t="nav_how">How It Works</a></li>
+    <li><a href="#gallery" data-t="nav_gallery">Gallery</a></li>
+    <li><a href="#attractions" data-t="nav_attractions">Attractions</a></li>
+    <li><a href="#map" data-t="nav_map">Map</a></li>
+    <li><a href="#entrepreneurs" class="nav-cta" data-t="nav_cta">List Your Business</a></li>
+  </ul>
+  <div class="nav-right">
+    <button id="langBtn" aria-label="Toggle language">
+      <span class="lang-flag">🇧🇷</span>
+      <span class="lang-code">PT</span>
+    </button>
+    <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
 
-    <footer>
-        <p>Rodapé do site</p>
-    </footer>
+<!-- Mobile Menu -->
+<ul class="nav-mobile" id="navMobile" style="display:none;">
+  <li><a href="#how" onclick="closeMenu()" data-t="nav_how">How It Works</a></li>
+  <li><a href="#gallery" onclick="closeMenu()" data-t="nav_gallery">Gallery</a></li>
+  <li><a href="#attractions" onclick="closeMenu()" data-t="nav_attractions">Attractions</a></li>
+  <li><a href="#map" onclick="closeMenu()" data-t="nav_map">Map</a></li>
+  <li><a href="#about" onclick="closeMenu()" data-t="nav_about">About</a></li>
+  <li><a href="#entrepreneurs" class="nav-cta" onclick="closeMenu()" data-t="nav_cta">List Your Business</a></li>
+</ul>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-scene">
+    <div id="stars"></div>
+    <div class="moon"></div>
+    <svg class="canopy" viewBox="0 0 1440 360" preserveAspectRatio="none" style="height:360px;">
+      <path d="M0,220 Q60,170 120,198 Q180,140 245,172 Q310,118 375,150 Q440,102 510,135 Q575,90 645,120 Q712,78 780,108 Q848,68 915,100 Q982,58 1050,88 Q1118,56 1180,82 Q1248,58 1310,80 Q1370,60 1440,75 L1440,360 L0,360Z" fill="rgba(10,38,19,0.7)"/>
+      <path d="M0,245 Q70,192 140,222 Q210,168 285,198 Q360,148 430,178 Q505,130 578,160 Q650,118 724,148 Q800,106 870,136 Q945,95 1016,125 Q1090,88 1158,116 Q1228,88 1300,112 Q1368,90 1440,106 L1440,360 L0,360Z" fill="rgba(10,38,19,0.85)"/>
+    </svg>
+    <div class="river-strip">
+      <div class="rwave" style="top:18px;--s:11s;opacity:.5;"></div>
+      <div class="rwave" style="top:38px;--s:15s;opacity:.35;"></div>
+      <div class="rwave" style="top:58px;--s:20s;opacity:.2;"></div>
+    </div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow" data-t="hero_eyebrow">Porto Velho · Rondônia · Amazon</div>
+    <h1 class="hero-title">PORTO<br><em>TOUR</em></h1>
+    <p class="hero-sub" data-t="hero_sub">Discover the city on the banks of the Madeira</p>
+    <div class="hero-rule"></div>
+    <p class="hero-desc" data-t="hero_desc">Porto Velho is one of Brazil's best-kept secrets — a city shaped by the Amazon, the river, and a history worth knowing. We're putting it on the map.</p>
+    <div class="hero-btns">
+      <a href="#attractions" class="btn btn-green" data-t="hero_btn1">Explore Attractions</a>
+      <a href="#entrepreneurs" class="btn btn-ghost" data-t="hero_btn2">I'm an Entrepreneur</a>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span data-t="scroll_hint">Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="inner">
+    <p class="sec-label" data-t="how_label">The Platform</p>
+    <h2 class="sec-title" data-t="how_title">How Porto Tour works</h2>
+    <p class="sec-desc" data-t="how_desc">A straightforward way to explore Porto Velho — or to put your business in front of visitors.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-n">01</div>
+        <div class="step-icon">🗺️</div>
+        <h3 data-t="step1_title">Browse the Map</h3>
+        <p data-t="step1_desc">Every mapped attraction, restaurant, and experience in Porto Velho — all in one place, organized by category.</p>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-n">02</div>
+        <div class="step-icon">📍</div>
+        <h3 data-t="step2_title">Find Your Spot</h3>
+        <p data-t="step2_desc">Filter by nature, history, or gastronomy and tap directly through to Google Maps directions.</p>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-n">03</div>
+        <div class="step-icon">🌿</div>
+        <h3 data-t="step3_title">Experience the Amazon</h3>
+        <p data-t="step3_desc">From river beaches to old railways, Porto Velho has far more to offer than most visitors ever discover.</p>
+      </div>
+      <div class="step">
+        <div class="step-line"></div>
+        <div class="step-n">04</div>
+        <div class="step-icon">🚀</div>
+        <h3 data-t="step4_title">Grow Your Business</h3>
+        <p data-t="step4_desc">Local entrepreneurs can register their attraction and reach tourists arriving from across Brazil and beyond.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="gallery-header">
+    <p class="sec-label" data-t="gallery_label">The City</p>
+    <h2 class="sec-title" data-t="gallery_title">Porto Velho in pictures</h2>
+  </div>
+  <div class="gallery-track-wrap">
+    <div class="gallery-track" id="gtrack">
+      <div class="gcard gc-praia" onclick="openModal('praia')">
+        <div class="gc-emoji">🏖️</div>
+        <div class="gcard-label">Praia do Cai N'Água</div>
+      </div>
+      <div class="gcard gc-ferro" onclick="openModal('ferro')">
+        <div class="gc-emoji">🚂</div>
+        <div class="gcard-label">Museu Madeira-Mamoré</div>
+      </div>
+      <div class="gcard gc-parque" onclick="openModal('parque')">
+        <div class="gc-emoji">🌿</div>
+        <div class="gcard-label">Parque Natural Municipal</div>
+      </div>
+      <div class="gcard gc-catedral" onclick="openModal('catedral')">
+        <div class="gc-emoji">⛪</div>
+        <div class="gcard-label">Catedral Nossa Senhora das Graças</div>
+      </div>
+      <div class="gcard gc-rio" onclick="openModal('rio')">
+        <div class="gc-emoji">🚤</div>
+        <div class="gcard-label">Rio Madeira</div>
+      </div>
+      <div class="gcard gc-mercado" onclick="openModal('mercado')">
+        <div class="gc-emoji">🐟</div>
+        <div class="gcard-label">Mercado do Peixe</div>
+      </div>
+    </div>
+  </div>
+  <div class="gallery-controls">
+    <button class="gctrl" id="gprev" aria-label="Previous">←</button>
+    <button class="gctrl" id="gnext" aria-label="Next">→</button>
+  </div>
+</section>
+
+<!-- ATTRACTIONS -->
+<section id="attractions">
+  <div class="inner">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:40px;">
+      <div>
+        <p class="sec-label" data-t="att_label">Destinations</p>
+        <h2 class="sec-title" style="margin-bottom:0;" data-t="att_title">Top attractions</h2>
+      </div>
+      <div class="filter-row" style="margin-bottom:0;">
+        <button class="ftab on" onclick="filter(this,'all')" data-t="filter_all">All</button>
+        <button class="ftab" onclick="filter(this,'nature')" data-t="filter_nature">Nature</button>
+        <button class="ftab" onclick="filter(this,'history')" data-t="filter_history">History</button>
+        <button class="ftab" onclick="filter(this,'food')" data-t="filter_food">Food</button>
+      </div>
+    </div>
+    <div class="cards" id="cards">
+      <div class="acard" data-cat="nature" onclick="openModal('praia')">
+        <div class="acard-top gc-praia">🏖️<span class="acard-badge" data-t="badge_nature">Nature</span></div>
+        <div class="acard-body">
+          <h3>Praia do Cai N'Água</h3>
+          <p data-t="praia_short">The most beloved river beach in Porto Velho — families gather on weekends to swim and watch the Madeira roll by.</p>
+          <div class="acard-foot">
+            <span class="stars-row">★★★★★ 4.9</span>
+            <a class="maps-link" href="https://www.google.com/maps/search/Praia+do+Cai+N'Água+Porto+Velho" target="_blank" rel="noopener" data-t="maps_open">Open in Maps</a>
+          </div>
+        </div>
+      </div>
+      <div class="acard" data-cat="history" onclick="openModal('ferro')">
+        <div class="acard-top gc-ferro">🚂<span class="acard-badge" data-t="badge_history">History</span></div>
+        <div class="acard-body">
+          <h3>Museu Madeira-Mamoré</h3>
+          <p data-t="ferro_short">The railroad that cost thousands of lives and connected the Amazon to the world. One of Brazil's most significant industrial heritage sites.</p>
+          <div class="acard-foot">
+            <span class="stars-row">★★★★☆ 4.7</span>
+            <a class="maps-link" href="https://www.google.com/maps/search/Museu+Estrada+de+Ferro+Madeira+Mamore+Porto+Velho" target="_blank" rel="noopener" data-t="maps_open">Open in Maps</a>
+          </div>
+        </div>
+      </div>
+      <div class="acard" data-cat="nature" onclick="openModal('parque')">
+        <div class="acard-top gc-parque">🌿<span class="acard-badge" data-t="badge_nature">Nature</span></div>
+        <div class="acard-body">
+          <h3>Parque Natural Municipal</h3>
+          <p data-t="parque_short">A patch of genuine Amazon forest inside the city limits. Trails, birdsong, and the reminder that nature here is never far away.</p>
+          <div class="acard-foot">
+            <span class="stars-row">★★★★★ 4.8</span>
+            <a class="maps-link" href="https://www.google.com/maps/search/Parque+Natural+Municipal+Porto+Velho" target="_blank" rel="noopener" data-t="maps_open">Open in Maps</a>
+          </div>
+        </div>
+      </div>
+      <div class="acard" data-cat="food" onclick="openModal('mercado')">
+        <div class="acard-top gc-mercado">🐟<span class="acard-badge" data-t="badge_food">Food</span></div>
+        <div class="acard-body">
+          <h3>Mercado do Peixe</h3>
+          <p data-t="mercado_short">Fresh tambaqui, pirarucu, and tucunaré pulled from the Madeira every morning. The local food scene starts right here.</p>
+          <div class="acard-foot">
+            <span class="stars-row">★★★★☆ 4.6</span>
+            <a class="maps-link" href="https://www.google.com/maps/search/Mercado+do+Peixe+Porto+Velho" target="_blank" rel="noopener" data-t="maps_open">Open in Maps</a>
+          </div>
+        </div>
+      </div>
+      <div class="acard" data-cat="history" onclick="openModal('catedral')">
+        <div class="acard-top gc-catedral">⛪<span class="acard-badge" data-t="badge_history">History</span></div>
+        <div class="acard-body">
+          <h3>Catedral Nossa Senhora das Graças</h3>
+          <p data-t="catedral_short">The city's landmark cathedral sits at the center of Porto Velho — a quiet anchor in an otherwise restless urban landscape.</p>
+          <div class="acard-foot">
+            <span class="stars-row">★★★★☆ 4.5</span>
+            <a class="maps-link" href="https://www.google.com/maps/search/Catedral+Nossa+Senhora+das+Graças+Porto+Velho" target="_blank" rel="noopener" data-t="maps_open">Open in Maps</a>
+          </div>
+        </div>
+      </div>
+      <div class="acard" data-cat="nature" onclick="openModal('rio')">
+        <div class="acard-top gc-rio">🚤<span class="acard-badge" data-t="badge_nature">Nature</span></div>
+        <div class="acard-body">
+          <h3>Rio Madeira Boat Tour</h3>
+          <p data-t="rio_short">Get on the water. The Madeira is one of the great Amazon tributaries — the only way to truly understand Porto Velho's scale is from the river.</p>
+          <div class="acard-foot">
+            <span class="stars-row">★★★★★ 4.9</span>
+            <a class="maps-link" href="https://www.google.com/maps/search/Rio+Madeira+Porto+Velho+barco" target="_blank" rel="noopener" data-t="maps_open">Open in Maps</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section id="map">
+  <div class="inner">
+    <p class="sec-label" data-t="map_label">Location</p>
+    <h2 class="sec-title" data-t="map_title">Find your way around</h2>
+    <p class="sec-desc" data-t="map_desc">Explore Porto Velho's key areas and plan your route before you arrive.</p>
+    <div class="map-wrap">
+      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d124737.25820474!2d-63.9401!3d-8.7619!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92325b76a9b8b369%3A0x9f7c9e6eb1a7b3d5!2sPorto+Velho%2C+RO!5e0!3m2!1sen!2sbr!4v1680000000000" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Porto Velho map"></iframe>
+      <div class="map-pins-legend">
+        <p data-t="map_legend">Legend</p>
+        <div class="leg-item"><div class="leg-dot" style="background:#3fc96e;"></div><span data-t="badge_nature">Nature</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#d4a017;"></div><span data-t="badge_history">History</span></div>
+        <div class="leg-item"><div class="leg-dot" style="background:#e87a30;"></div><span data-t="badge_food">Food</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENTREPRENEURS -->
+<section id="entrepreneurs">
+  <div class="inner">
+    <div class="emp-grid">
+      <div>
+        <p class="sec-label" data-t="emp_label">For Business Owners</p>
+        <h2 class="sec-title" data-t="emp_title">Put your attraction on the map</h2>
+        <p class="sec-desc" data-t="emp_desc">Whether you run a boat tour, a regional restaurant, or a guesthouse in the forest — Porto Tour gives you visibility with the tourists who are already looking.</p>
+        <div class="emp-perks">
+          <div class="perk">
+            <div class="perk-ico">📍</div>
+            <div class="perk-text">
+              <h4 data-t="perk1_title">Mapped visibility</h4>
+              <p data-t="perk1_desc">Your business appears on the map for every visitor browsing Porto Velho's attractions.</p>
+            </div>
+          </div>
+          <div class="perk">
+            <div class="perk-ico">📋</div>
+            <div class="perk-text">
+              <h4 data-t="perk2_title">Full business profile</h4>
+              <p data-t="perk2_desc">Photos, hours, pricing, and a direct contact link — everything a tourist needs to show up at your door.</p>
+            </div>
+          </div>
+          <div class="perk">
+            <div class="perk-ico">⭐</div>
+            <div class="perk-text">
+              <h4 data-t="perk3_title">Real reviews</h4>
+              <p data-t="perk3_desc">Build your reputation through genuine visitor feedback over time.</p>
+            </div>
+          </div>
+          <div class="perk">
+            <div class="perk-ico">📊</div>
+            <div class="perk-text">
+              <h4 data-t="perk4_title">Access analytics</h4>
+              <p data-t="perk4_desc">Know how many people viewed your listing and where they came from.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card">
+        <h3 data-t="form_title">Register your business</h3>
+        <p class="form-note" data-t="form_note">Free to join. Takes less than two minutes.</p>
+        <div class="fgroup">
+          <label data-t="form_name_label">Business name</label>
+          <input type="text" id="f-name" data-t-placeholder="form_name_ph">
+        </div>
+        <div class="fgroup">
+          <label data-t="form_cat_label">Category</label>
+          <select id="f-cat">
+            <option value="" data-t="form_cat_default">Select a category</option>
+            <option data-t="cat1">Nature & Ecotourism</option>
+            <option data-t="cat2">Regional Cuisine</option>
+            <option data-t="cat3">History & Culture</option>
+            <option data-t="cat4">Accommodation</option>
+            <option data-t="cat5">Tours & Adventure</option>
+            <option data-t="cat6">Crafts & Local Products</option>
+          </select>
+        </div>
+        <div class="fgroup">
+          <label data-t="form_tel_label">WhatsApp / Contact</label>
+          <input type="text" id="f-tel" placeholder="(69) 9 0000-0000">
+        </div>
+        <div class="fgroup">
+          <label data-t="form_desc_label">Short description</label>
+          <textarea id="f-desc" data-t-placeholder="form_desc_ph"></textarea>
+        </div>
+        <button class="form-submit" onclick="submitForm()" data-t="form_submit">Register for Free 🚀</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="inner">
+    <div class="about-grid">
+      <div>
+        <p class="sec-label" data-t="about_label">The Project</p>
+        <h2 class="sec-title" data-t="about_title">About Porto Tour</h2>
+        <p class="sec-desc" data-t="about_desc">Porto Velho has real things to offer. History, nature, food, and a river that puts most destinations to shame. The problem was never the city — it was visibility. We're fixing that.</p>
+        <div class="stats">
+          <div class="stat"><div class="stat-n">50+</div><div class="stat-l" data-t="stat1">Attractions mapped</div></div>
+          <div class="stat"><div class="stat-n">30+</div><div class="stat-l" data-t="stat2">Entrepreneurs registered</div></div>
+          <div class="stat"><div class="stat-n">5</div><div class="stat-l" data-t="stat3">Categories</div></div>
+          <div class="stat"><div class="stat-n">∞</div><div class="stat-l" data-t="stat4">Experiences waiting</div></div>
+        </div>
+        <div class="team-row">
+          <h4 data-t="team_label">Development team</h4>
+          <div class="chips">
+            <span class="chip">Alan</span><span class="chip">Davi</span><span class="chip">Lucas</span><span class="chip">João Guilherme</span><span class="chip">Kelvyn</span>
+          </div>
+        </div>
+      </div>
+      <div class="about-facts">
+        <div class="fact">
+          <div class="fact-ico">🌊</div>
+          <div class="fact-text">
+            <strong data-t="fact1_title">Rio Madeira</strong>
+            <span data-t="fact1_desc">One of the longest Amazon tributaries — 3,315 km of water that shapes everything about this city.</span>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-ico">🌿</div>
+          <div class="fact-text">
+            <strong data-t="fact2_title">Amazon Rainforest at your doorstep</strong>
+            <span data-t="fact2_desc">Porto Velho sits inside Rondônia, one of the states with the most direct access to preserved forest.</span>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-ico">🚂</div>
+          <div class="fact-text">
+            <strong data-t="fact3_title">Madeira-Mamoré Railway</strong>
+            <span data-t="fact3_desc">Built at the turn of the 20th century, this railroad is a national heritage landmark and one of the most compelling pieces of industrial history in the Amazon.</span>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-ico">🐊</div>
+          <div class="fact-text">
+            <strong data-t="fact4_title">Biodiversity unlike anywhere else</strong>
+            <span data-t="fact4_desc">Caimans, river dolphins, macaws, and hundreds of fish species — the Madeira basin is one of the most biodiverse corridors on the planet.</span>
+          </div>
+        </div>
+        <div class="fact">
+          <div class="fact-ico">🐟</div>
+          <div class="fact-text">
+            <strong data-t="fact5_title">Regional cuisine worth travelling for</strong>
+            <span data-t="fact5_desc">Tambaqui, pirarucu, tacacá — the food of Porto Velho is rooted in indigenous and riverine traditions that most Brazilians never get to taste.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">PORTO <em>TOUR</em></div>
+    <div class="footer-copy" data-t="footer_copy">© 2025 Porto Tour · Porto Velho, Rondônia, Brazil<br>Alan · Davi · Lucas · João Guilherme · Kelvyn</div>
+    <div class="footer-v">v 1.0</div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="closeOverlay(event)">
+  <div class="mbox">
+    <button class="mclose" onclick="closeModal()">✕</button>
+    <p class="m-sub" id="m-sub"></p>
+    <h2 class="m-title" id="m-title"></h2>
+    <div class="m-ico" id="m-ico"></div>
+    <p class="m-desc" id="m-desc"></p>
+    <div class="m-tags" id="m-tags"></div>
+    <a class="m-maps" id="m-maps-link" href="#" target="_blank" rel="noopener" data-t="modal_maps">View on Google Maps ↗</a>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ── TRANSLATIONS ── */
+const T = {
+  en: {
+    nav_how:'How It Works', nav_gallery:'Gallery', nav_attractions:'Attractions',
+    nav_map:'Map', nav_about:'About', nav_cta:'List Your Business',
+    hero_eyebrow:'Porto Velho · Rondônia · Amazon',
+    hero_sub:'Discover the city on the banks of the Madeira',
+    hero_desc:"Porto Velho is one of Brazil's best-kept secrets — a city shaped by the Amazon, the river, and a history worth knowing. We're putting it on the map.",
+    hero_btn1:'Explore Attractions', hero_btn2:"I'm an Entrepreneur",
+    scroll_hint:'Scroll',
+    how_label:'The Platform', how_title:'How Porto Tour works',
+    how_desc:'A straightforward way to explore Porto Velho — or to put your business in front of visitors.',
+    step1_title:'Browse the Map', step1_desc:'Every mapped attraction, restaurant, and experience in Porto Velho — all in one place, organized by category.',
+    step2_title:'Find Your Spot', step2_desc:'Filter by nature, history, or gastronomy and tap directly through to Google Maps directions.',
+    step3_title:'Experience the Amazon', step3_desc:'From river beaches to old railways, Porto Velho has far more to offer than most visitors ever discover.',
+    step4_title:'Grow Your Business', step4_desc:'Local entrepreneurs can register their attraction and reach tourists arriving from across Brazil and beyond.',
+    gallery_label:'The City', gallery_title:'Porto Velho in pictures',
+    att_label:'Destinations', att_title:'Top attractions',
+    filter_all:'All', filter_nature:'Nature', filter_history:'History', filter_food:'Food',
+    badge_nature:'Nature', badge_history:'History', badge_food:'Food',
+    maps_open:'Open in Maps',
+    praia_short:"The most beloved river beach in Porto Velho — families gather on weekends to swim and watch the Madeira roll by.",
+    ferro_short:"The railroad that cost thousands of lives and connected the Amazon to the world. One of Brazil's most significant industrial heritage sites.",
+    parque_short:"A patch of genuine Amazon forest inside the city limits. Trails, birdsong, and the reminder that nature here is never far away.",
+    mercado_short:"Fresh tambaqui, pirarucu, and tucunaré pulled from the Madeira every morning. The local food scene starts right here.",
+    catedral_short:"The city's landmark cathedral sits at the center of Porto Velho — a quiet anchor in an otherwise restless urban landscape.",
+    rio_short:"Get on the water. The Madeira is one of the great Amazon tributaries — the only way to truly understand Porto Velho's scale is from the river.",
+    map_label:'Location', map_title:'Find your way around',
+    map_desc:"Explore Porto Velho's key areas and plan your route before you arrive.",
+    map_legend:'Legend',
+    emp_label:'For Business Owners', emp_title:'Put your attraction on the map',
+    emp_desc:'Whether you run a boat tour, a regional restaurant, or a guesthouse in the forest — Porto Tour gives you visibility with the tourists who are already looking.',
+    perk1_title:'Mapped visibility', perk1_desc:"Your business appears on the map for every visitor browsing Porto Velho's attractions.",
+    perk2_title:'Full business profile', perk2_desc:'Photos, hours, pricing, and a direct contact link — everything a tourist needs to show up at your door.',
+    perk3_title:'Real reviews', perk3_desc:'Build your reputation through genuine visitor feedback over time.',
+    perk4_title:'Access analytics', perk4_desc:'Know how many people viewed your listing and where they came from.',
+    form_title:'Register your business', form_note:'Free to join. Takes less than two minutes.',
+    form_name_label:'Business name', form_name_ph:'e.g. Amazônia Boat Tours',
+    form_cat_label:'Category', form_cat_default:'Select a category',
+    cat1:'Nature & Ecotourism', cat2:'Regional Cuisine', cat3:'History & Culture',
+    cat4:'Accommodation', cat5:'Tours & Adventure', cat6:'Crafts & Local Products',
+    form_tel_label:'WhatsApp / Contact', form_desc_label:'Short description',
+    form_desc_ph:'Tell visitors what makes your place worth visiting...',
+    form_submit:'Register for Free 🚀',
+    about_label:'The Project', about_title:'About Porto Tour',
+    about_desc:"Porto Velho has real things to offer. History, nature, food, and a river that puts most destinations to shame. The problem was never the city — it was visibility. We're fixing that.",
+    stat1:'Attractions mapped', stat2:'Entrepreneurs registered', stat3:'Categories', stat4:'Experiences waiting',
+    team_label:'Development team',
+    fact1_title:'Rio Madeira', fact1_desc:'One of the longest Amazon tributaries — 3,315 km of water that shapes everything about this city.',
+    fact2_title:'Amazon Rainforest at your doorstep', fact2_desc:'Porto Velho sits inside Rondônia, one of the states with the most direct access to preserved forest.',
+    fact3_title:'Madeira-Mamoré Railway', fact3_desc:'Built at the turn of the 20th century, this railroad is a national heritage landmark and one of the most compelling pieces of industrial history in the Amazon.',
+    fact4_title:'Biodiversity unlike anywhere else', fact4_desc:'Caimans, river dolphins, macaws, and hundreds of fish species — the Madeira basin is one of the most biodiverse corridors on the planet.',
+    fact5_title:'Regional cuisine worth travelling for', fact5_desc:'Tambaqui, pirarucu, tacacá — the food of Porto Velho is rooted in indigenous and riverine traditions that most Brazilians never get to taste.',
+    footer_copy:'© 2025 Porto Tour · Porto Velho, Rondônia, Brasil<br>Alan · Davi · Lucas · João Guilherme · Kelvyn',
+    modal_maps:'Ver no Google Maps ↗',
+    toast_missing:'⚠️ Please fill in all required fields.',
+    toast_success:'registered successfully!',
+  },
+  pt: {
+    nav_how:'Como Funciona', nav_gallery:'Galeria', nav_attractions:'Atrações',
+    nav_map:'Mapa', nav_about:'Sobre', nav_cta:'Cadastre seu Negócio',
+    hero_eyebrow:'Porto Velho · Rondônia · Amazônia',
+    hero_sub:'Descubra a cidade às margens do Madeira',
+    hero_desc:'Porto Velho é um dos segredos mais bem guardados do Brasil — uma cidade moldada pela Amazônia, pelo rio e por uma história que vale conhecer. Estamos colocando ela no mapa.',
+    hero_btn1:'Explorar Atrações', hero_btn2:'Sou Empreendedor',
+    scroll_hint:'Rolar',
+    how_label:'A Plataforma', how_title:'Como o Porto Tour funciona',
+    how_desc:'Uma forma simples e direta de explorar Porto Velho — ou de colocar seu negócio na frente dos visitantes.',
+    step1_title:'Explore o Mapa', step1_desc:'Todas as atrações, restaurantes e experiências de Porto Velho — em um só lugar, organizados por categoria.',
+    step2_title:'Encontre seu Destino', step2_desc:'Filtre por natureza, história ou gastronomia e acesse as rotas diretamente pelo Google Maps.',
+    step3_title:'Viva a Amazônia', step3_desc:'De praias fluviais a antigas ferrovias, Porto Velho tem muito mais a oferecer do que a maioria dos visitantes descobre.',
+    step4_title:'Expanda seu Negócio', step4_desc:'Empreendedores locais podem cadastrar sua atração e alcançar turistas de todo o Brasil e do exterior.',
+    gallery_label:'A Cidade', gallery_title:'Porto Velho em imagens',
+    att_label:'Destinos', att_title:'Atrações em destaque',
+    filter_all:'Todos', filter_nature:'Natureza', filter_history:'História', filter_food:'Gastronomia',
+    badge_nature:'Natureza', badge_history:'História', badge_food:'Gastronomia',
+    maps_open:'Abrir no Maps',
+    praia_short:'A praia fluvial mais amada de Porto Velho — famílias se reúnem nos finais de semana para nadar e observar as águas do Madeira passando.',
+    ferro_short:'A ferrovia que custou milhares de vidas e conectou a Amazônia ao mundo. Um dos locais de patrimônio industrial mais importantes do Brasil.',
+    parque_short:'Um fragmento genuíno da floresta amazônica dentro do perímetro urbano da cidade. Trilhas, pássaros e a certeza de que a natureza nunca está longe.',
+    mercado_short:'Tambaqui, pirarucu e tucunaré frescos, tirados do Madeira toda manhã. É aqui que começa a cena gastronômica local.',
+    catedral_short:'A catedral da cidade fica no centro de Porto Velho — um ponto de referência tranquilo em uma paisagem urbana sempre agitada.',
+    rio_short:'Entre no barco. O Madeira é um dos grandes afluentes do Amazonas — a única forma de realmente entender a escala de Porto Velho é de dentro d\'água.',
+    map_label:'Localização', map_title:'Se encontre na cidade',
+    map_desc:'Explore as principais áreas de Porto Velho e planeje seu roteiro antes de chegar.',
+    map_legend:'Legenda',
+    emp_label:'Para Empreendedores', emp_title:'Coloque sua atração no mapa',
+    emp_desc:'Seja um passeio de barco, um restaurante regional ou uma pousada na floresta — o Porto Tour conecta você aos turistas que já estão procurando.',
+    perk1_title:'Visibilidade no mapa', perk1_desc:'Seu negócio aparece no mapa para cada visitante que busca atrações em Porto Velho.',
+    perk2_title:'Perfil completo', perk2_desc:'Fotos, horários, preços e link de contato direto — tudo que um turista precisa para ir até você.',
+    perk3_title:'Avaliações reais', perk3_desc:'Construa sua reputação com o feedback genuíno de visitantes ao longo do tempo.',
+    perk4_title:'Dados de acesso', perk4_desc:'Saiba quantas pessoas visualizaram seu negócio e de onde vieram.',
+    form_title:'Cadastre seu negócio', form_note:'Gratuito. Leva menos de dois minutos.',
+    form_name_label:'Nome do negócio', form_name_ph:'Ex: Passeios Amazônia',
+    form_cat_label:'Categoria', form_cat_default:'Selecione uma categoria',
+    cat1:'Natureza e Ecoturismo', cat2:'Gastronomia Regional', cat3:'História e Cultura',
+    cat4:'Hospedagem', cat5:'Passeios e Aventura', cat6:'Artesanato e Produtos Locais',
+    form_tel_label:'WhatsApp / Contato', form_desc_label:'Descrição breve',
+    form_desc_ph:'Conte o que torna o seu lugar especial...',
+    form_submit:'Cadastrar Gratuitamente 🚀',
+    about_label:'O Projeto', about_title:'Sobre o Porto Tour',
+    about_desc:'Porto Velho tem muito a oferecer. História, natureza, gastronomia e um rio que envergonha a maioria dos destinos turísticos. O problema nunca foi a cidade — foi a visibilidade. Estamos resolvendo isso.',
+    stat1:'Atrações mapeadas', stat2:'Empreendedores cadastrados', stat3:'Categorias', stat4:'Experiências esperando',
+    team_label:'Equipe de desenvolvimento',
+    fact1_title:'Rio Madeira', fact1_desc:'Um dos maiores afluentes do Amazonas — 3.315 km de água que moldam tudo sobre esta cidade.',
+    fact2_title:'Floresta Amazônica na porta de casa', fact2_desc:'Porto Velho fica em Rondônia, um dos estados com acesso mais direto à floresta preservada.',
+    fact3_title:'Ferrovia Madeira-Mamoré', fact3_desc:'Construída no início do século XX, esta ferrovia é tombada como patrimônio nacional e representa uma das histórias industriais mais marcantes da Amazônia.',
+    fact4_title:'Biodiversidade como em nenhum outro lugar', fact4_desc:'Jacarés, botos, araras e centenas de espécies de peixes — a bacia do Madeira é um dos corredores mais biodiversos do planeta.',
+    fact5_title:'Gastronomia que vale a viagem', fact5_desc:'Tambaqui, pirarucu, tacacá — a culinária de Porto Velho tem raízes indígenas e ribeirinhas que a maioria dos brasileiros nunca chegou a provar.',
+    footer_copy:'© 2025 Porto Tour · Porto Velho, Rondônia, Brasil<br>Alan · Davi · Lucas · João Guilherme · Kelvyn',
+    modal_maps:'Ver no Google Maps ↗',
+    toast_missing:'⚠️ Preencha todos os campos obrigatórios.',
+    toast_success:'cadastrado com sucesso!',
+  }
+};
+
+/* Modal bilíngue */
+const modalData = {
+  praia:{
+    sub:{en:'🏖️ Nature',pt:'🏖️ Natureza'},
+    title:"Praia do Cai N'Água", ico:'🏖️',
+    desc:{
+      en:"Porto Velho's most popular river beach stretches along the Madeira and gets packed on weekends. The water is brown from sediment — that's normal and completely natural. Locals bring coolers, kids, and hammocks. There's no better introduction to how the city actually lives.",
+      pt:"A praia fluvial mais popular de Porto Velho se estende ao longo do Madeira e fica cheia nos fins de semana. A água é marrom pelo sedimento — isso é normal e completamente natural. Os moradores trazem caixas de isopor, crianças e redes. Não há apresentação melhor de como a cidade realmente vive."
+    },
+    tags:{en:['Free entry','Family-friendly','Rio Madeira','Weekends'],pt:['Entrada gratuita','Família','Rio Madeira','Fins de semana']},
+    maps:"https://www.google.com/maps/search/Praia+do+Cai+N'Água+Porto+Velho"
+  },
+  ferro:{
+    sub:{en:'🚂 History',pt:'🚂 História'},
+    title:'Museu Madeira-Mamoré', ico:'🚂',
+    desc:{
+      en:"The Madeira-Mamoré railroad was built between 1907 and 1912 to bypass the unnavigable stretches of the river. The cost in human lives was staggering. Today the preserved locomotives, original station, and documentation make this one of the most important historical sites in the Brazilian Amazon.",
+      pt:"A ferrovia Madeira-Mamoré foi construída entre 1907 e 1912 para contornar os trechos não navegáveis do rio. O custo em vidas humanas foi imensurável. Hoje, as locomotivas preservadas, a estação original e a documentação fazem deste um dos sítios históricos mais importantes da Amazônia brasileira."
+    },
+    tags:{en:['National Heritage','Museum','19th–20th Century','Affordable entry'],pt:['Patrimônio Nacional','Museu','Séc. XIX–XX','Entrada acessível']},
+    maps:'https://www.google.com/maps/search/Museu+Estrada+de+Ferro+Madeira+Mamore+Porto+Velho'
+  },
+  parque:{
+    sub:{en:'🌿 Nature',pt:'🌿 Natureza'},
+    title:'Parque Natural Municipal', ico:'🌿',
+    desc:{
+      en:"A protected fragment of Amazon forest sitting right inside Porto Velho's urban perimeter. The trails are short but genuine — you'll hear birds you can't identify, spot bromeliads on bare branches, and get a real sense of what the land looked like before the city arrived.",
+      pt:"Um fragmento protegido da floresta amazônica dentro do perímetro urbano de Porto Velho. As trilhas são curtas, mas verdadeiras — você vai ouvir pássaros que não sabe identificar, ver bromélias em galhos secos e ter uma ideia real de como era a terra antes de a cidade chegar."
+    },
+    tags:{en:['Free','Trail walks','Birdwatching','Educational'],pt:['Gratuito','Trilhas','Observação de aves','Educativo']},
+    maps:'https://www.google.com/maps/search/Parque+Natural+Municipal+Porto+Velho'
+  },
+  mercado:{
+    sub:{en:'🐟 Food',pt:'🐟 Gastronomia'},
+    title:'Mercado do Peixe', ico:'🐟',
+    desc:{
+      en:"The fish market is where the Madeira's catch lands every morning. Tambaqui grilled whole over coals, pirarucu in every preparation imaginable, tucunaré with manioc flour — this is the food Porto Velho has eaten for generations. Go early, eat at one of the simple stalls.",
+      pt:"O mercado de peixe é onde a pesca do Madeira chega toda manhã. Tambaqui inteiro na brasa, pirarucu em todas as formas imagináveis, tucunaré com farinha — é a comida que Porto Velho come há gerações. Vá cedo e coma em uma das barracas simples do local."
+    },
+    tags:{en:['Regional cuisine','Morning market','Local experience','Affordable'],pt:['Culinária regional','Mercado matinal','Experiência local','Acessível']},
+    maps:'https://www.google.com/maps/search/Mercado+do+Peixe+Porto+Velho'
+  },
+  catedral:{
+    sub:{en:'⛪ History',pt:'⛪ História'},
+    title:'Catedral Nossa Senhora das Graças', ico:'⛪',
+    desc:{
+      en:"The cathedral anchors the city center and has been the site of Porto Velho's major celebrations since it was founded. Its architecture is modest by cathedral standards — unpretentious in a way that fits the city. Worth a visit for the interior and the square in front.",
+      pt:"A catedral ancora o centro da cidade e é palco das principais celebrações de Porto Velho desde sua fundação. Sua arquitetura é modesta para os padrões de uma catedral — sem pretensões, do jeito que combina com a cidade. Vale a visita pelo interior e pela praça à frente."
+    },
+    tags:{en:['City center','Religious heritage','Architecture','Free'],pt:['Centro','Patrimônio religioso','Arquitetura','Gratuito']},
+    maps:'https://www.google.com/maps/search/Catedral+Nossa+Senhora+das+Graças+Porto+Velho'
+  },
+  rio:{
+    sub:{en:'🚤 Nature',pt:'🚤 Natureza'},
+    title:'Rio Madeira Boat Tour', ico:'🚤',
+    desc:{
+      en:"The Madeira is one of the Amazon's major tributaries and carries more sediment than almost any river on earth. Taking a boat out at dawn or dusk — when the light hits the water and the forest closes in on both sides — is the kind of thing people come back home talking about.",
+      pt:"O Madeira é um dos principais afluentes do Amazonas e carrega mais sedimento do que quase qualquer rio do planeta. Pegar um barco ao amanhecer ou entardecer — quando a luz bate na água e a floresta fecha dos dois lados — é o tipo de coisa que as pessoas voltam contando para todo mundo."
+    },
+    tags:{en:['Guided tours','Dawn & dusk','Photography','Amazon tributary'],pt:['Passeios guiados','Amanhecer e entardecer','Fotografia','Afluente do Amazonas']},
+    maps:'https://www.google.com/maps/search/passeio+de+barco+Rio+Madeira+Porto+Velho'
+  }
+};
+
+/* ── Language state ── */
+let lang = 'en';
+
+function applyLang(l) {
+  lang = l;
+  const t = T[l];
+
+  /* Text nodes via data-t */
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+
+  /* Placeholder via data-t-placeholder */
+  document.querySelectorAll('[data-t-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-t-placeholder');
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+
+  /* Select options with data-t */
+  document.querySelectorAll('select option[data-t]').forEach(opt => {
+    const key = opt.getAttribute('data-t');
+    if (t[key] !== undefined) opt.textContent = t[key];
+  });
+
+  /* html lang attr */
+  document.documentElement.lang = l === 'pt' ? 'pt-BR' : 'en';
+
+  /* Button UI */
+  const btn = document.getElementById('langBtn');
+  if (l === 'pt') {
+    btn.innerHTML = '<span class="lang-flag">🇺🇸</span><span class="lang-code">EN</span>';
+    btn.title = 'Switch to English';
+  } else {
+    btn.innerHTML = '<span class="lang-flag">🇧🇷</span><span class="lang-code">PT</span>';
+    btn.title = 'Mudar para Português';
+  }
+}
+
+document.getElementById('langBtn').addEventListener('click', () => {
+  applyLang(lang === 'en' ? 'pt' : 'en');
+});
+
+/* ── Stars ── */
+const starsEl = document.getElementById('stars');
+for(let i=0;i<90;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const sz=Math.random()*2.2+.7;
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*55}%;width:${sz}px;height:${sz}px;--d:${(Math.random()*4+2).toFixed(1)}s;--a:${(Math.random()*.3+.15).toFixed(2)};--b:${(Math.random()*.5+.5).toFixed(2)};animation-delay:${(Math.random()*5).toFixed(1)}s;`;
+  starsEl.appendChild(s);
+}
+
+/* ── Nav scroll ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50);
+});
+
+/* ── Mobile menu ── */
+const hamburger=document.getElementById('hamburger');
+const navMobile=document.getElementById('navMobile');
+hamburger.addEventListener('click',()=>{
+  const open=navMobile.style.display==='flex';
+  navMobile.style.display=open?'none':'flex';
+});
+function closeMenu(){navMobile.style.display='none';}
+
+/* ── Gallery ── */
+const track=document.getElementById('gtrack');
+let gIdx=0;
+const cardW=()=>track.querySelector('.gcard').offsetWidth+16;
+document.getElementById('gnext').addEventListener('click',()=>{
+  const max=track.children.length-3;
+  gIdx=Math.min(gIdx+1,max);
+  track.style.transform=`translateX(-${gIdx*cardW()}px)`;
+});
+document.getElementById('gprev').addEventListener('click',()=>{
+  gIdx=Math.max(gIdx-1,0);
+  track.style.transform=`translateX(-${gIdx*cardW()}px)`;
+});
+
+/* ── Filter ── */
+function filter(btn,cat){
+  document.querySelectorAll('.ftab').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.acard').forEach(c=>{
+    c.style.display=(cat==='all'||c.dataset.cat===cat)?'block':'none';
+  });
+}
+
+/* ── Modal ── */
+function openModal(key){
+  const d=modalData[key];
+  document.getElementById('m-sub').textContent=d.sub[lang];
+  document.getElementById('m-title').textContent=d.title;
+  document.getElementById('m-ico').textContent=d.ico;
+  document.getElementById('m-desc').textContent=d.desc[lang];
+  document.getElementById('m-tags').innerHTML=d.tags[lang].map(t=>`<span class="m-tag">${t}</span>`).join('');
+  document.getElementById('m-maps-link').href=d.maps;
+  document.getElementById('m-maps-link').textContent=T[lang].modal_maps;
+  document.getElementById('overlay').classList.add('open');
+}
+function closeOverlay(e){if(e.target===document.getElementById('overlay'))closeModal();}
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+
+/* ── Toast ── */
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+
+/* ── Form ── */
+function submitForm(){
+  const name=document.getElementById('f-name').value.trim();
+  const cat=document.getElementById('f-cat').value;
+  const tel=document.getElementById('f-tel').value.trim();
+  if(!name||!cat||!tel){showToast(T[lang].toast_missing);return;}
+  showToast(`✅ "${name}" ${T[lang].toast_success}`);
+  document.getElementById('f-name').value='';
+  document.getElementById('f-cat').value='';
+  document.getElementById('f-tel').value='';
+  document.getElementById('f-desc').value='';
+}
+</script>
 </body>
 </html>
